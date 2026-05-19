@@ -58,11 +58,11 @@ const ProductCard = memo(({ product, shadeIndex = 0 }) => {
       <Link to={`/product/${product.id}`} className="absolute inset-0 z-0">
         <div className="absolute inset-x-0 bottom-24 h-[55%] flex items-end justify-center px-8">
           <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            className="w-full h-full object-contain origin-bottom transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.04]"
-          />
+  src={product.imageUrl || product.image} 
+  alt={product.name}
+  loading="lazy"
+  className="w-full h-full object-contain origin-bottom transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.04]"
+/>
         </div>
       </Link>
 

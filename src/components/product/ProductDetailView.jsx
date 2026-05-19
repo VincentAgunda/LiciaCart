@@ -6,6 +6,8 @@ import {
   RemoveRounded,
   ShoppingBagOutlined,
   FavoriteBorderRounded,
+  FavoriteRounded,
+  CheckRounded,
   Twitter,
   Facebook,
   Instagram,
@@ -17,6 +19,8 @@ import { shareOnTwitter, shareOnFacebook, shareOnInstagram } from "../../service
 
 const ProductDetailView = ({ product }) => {
   const [qty, setQty] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
   const { addToCart } = useCart();
 
   if (!product)
@@ -28,6 +32,18 @@ const ProductDetailView = ({ product }) => {
 
   const handleAdd = () => {
     addToCart(product, qty);
+    
+    // Trigger success feedback
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+      setQty(1); // Optional: reset quantity after adding
+    }, 2000);
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    // In the future, hook this up to a useWishlist hook or user profile backend
   };
 
   return (
@@ -41,7 +57,7 @@ const ProductDetailView = ({ product }) => {
       >
         <div className="overflow-hidden rounded-[40px] bg-[#F5F5F7] flex items-center justify-center h-[500px] md:h-[700px] p-10">
           <img
-            src={product.image}
+            src={product.imageUrl || product.image}
             alt={product.name}
             className="w-full h-full object-contain mix-blend-multiply"
           />
@@ -106,19 +122,40 @@ const ProductDetailView = ({ product }) => {
           <div className="flex flex-wrap gap-4 w-full sm:w-auto">
             <button
               onClick={handleAdd}
-              className="flex-1 sm:flex-none h-14 px-10 rounded-full bg-[#1d1d1f] text-white font-medium text-lg tracking-tight flex items-center justify-center gap-3 hover:bg-black transition-all duration-300"
+              disabled={isAdded}
+              className={`flex-1 sm:flex-none h-14 px-10 rounded-full font-medium text-lg tracking-tight flex items-center justify-center gap-3 transition-all duration-300 ${
+                isAdded 
+                ? "bg-green-600 text-white" 
+                : "bg-[#1d1d1f] text-white hover:bg-black"
+              }`}
             >
-              <ShoppingBagOutlined sx={{ fontSize: 22 }} />
-              Add to Bag
+              {isAdded ? (
+                <>
+                  <CheckRounded sx={{ fontSize: 22 }} />
+                  Added
+                </>
+              ) : (
+                <>
+                  <ShoppingBagOutlined sx={{ fontSize: 22 }} />
+                  Add to Bag
+                </>
+              )}
             </button>
 
-            <button className="h-14 px-6 rounded-full bg-[#F5F5F7] text-[#1d1d1f] hover:bg-gray-200 transition-all duration-300 flex items-center justify-center">
-              <FavoriteBorderRounded />
+            <button 
+              onClick={toggleFavorite}
+              className={`h-14 w-14 rounded-full transition-all duration-300 flex items-center justify-center ${
+                isFavorite 
+                ? "bg-red-50 text-red-500 border border-red-100" 
+                : "bg-[#F5F5F7] text-[#1d1d1f] hover:bg-gray-200"
+              }`}
+            >
+              {isFavorite ? <FavoriteRounded /> : <FavoriteBorderRounded />}
             </button>
           </div>
         </div>
 
-        {/* SHARE - Preserved with Apple aesthetics */}
+        {/* SHARE */}
         <div className="mt-16 pt-10 border-t border-gray-200/60">
           <p className="text-sm font-semibold tracking-tight text-gray-500 mb-5">
             Share this product
