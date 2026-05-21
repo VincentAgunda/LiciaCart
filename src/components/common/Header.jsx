@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -90,13 +90,15 @@ const Header = () => {
       ]
     : [];
 
+  const cartBadgeCount = cart?.length || 0;
+
   return (
     <>
       <header
-        className={`sticky top-0 z-50 transition-all duration-500 border-b ${
+        className={`sticky top-0 z-50 transition-all duration-500 border-b bg-[#ffffff] ${
           scrolled
-            ? "bg-white/80 backdrop-blur-2xl border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
-            : "bg-white/95 border-transparent"
+            ? "border-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+            : "border-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -112,7 +114,7 @@ const Header = () => {
                 <div className="absolute inset-0 bg-black/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
               <div className="hidden sm:flex flex-col leading-none">
-                <span className="text-[1.05rem] font-semibold tracking-tight text-gray-900">
+                <span className="text-[1.05rem] font-semibold tracking-tight text-[#1f1f1f]">
                   Lucía Store
                 </span>
                 <span className="text-[11px] uppercase tracking-[0.25em] text-gray-400">
@@ -137,7 +139,7 @@ const Header = () => {
                       <Link
                         to={item.path}
                         className={`relative px-4 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-2 text-sm font-medium ${
-                          active || shopDropdown ? "bg-black text-white shadow-lg" : "text-gray-700 hover:bg-gray-100"
+                          active || shopDropdown ? "bg-[#1f1f1f] text-white shadow-lg" : "text-[#1f1f1f] hover:bg-gray-100"
                         }`}
                       >
                         {item.icon}
@@ -156,14 +158,14 @@ const Header = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 10, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden py-2 z-50"
+                            className="absolute top-full left-0 mt-2 w-56 bg-[#ffffff] border border-gray-100 rounded-2xl shadow-xl overflow-hidden py-2 z-50"
                           >
                             {shopCategories.map((cat) => (
                               <Link
                                 key={cat.name}
                                 to={cat.path}
                                 onClick={() => setShopDropdown(false)}
-                                className="block px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-black transition-colors"
+                                className="block px-5 py-3 text-sm font-medium text-[#1f1f1f] hover:bg-gray-50 hover:text-black transition-colors"
                               >
                                 {cat.name}
                               </Link>
@@ -180,7 +182,7 @@ const Header = () => {
                     key={item.name}
                     to={item.path}
                     className={`relative px-4 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-2 text-sm font-medium ${
-                      active ? "bg-black text-white shadow-lg" : "text-gray-700 hover:bg-gray-100"
+                      active ? "bg-[#1f1f1f] text-white shadow-lg" : "text-[#1f1f1f] hover:bg-gray-100"
                     }`}
                   >
                     {item.icon}
@@ -190,7 +192,7 @@ const Header = () => {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         className={`absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full text-[11px] flex items-center justify-center font-semibold ${
-                          active ? "bg-white text-black" : "bg-black text-white"
+                          active ? "bg-white text-black" : "bg-[#1f1f1f] text-white"
                         }`}
                       >
                         {item.badge}
@@ -211,7 +213,7 @@ const Header = () => {
                         key={item.name}
                         to={item.path}
                         className={`px-4 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-2 text-sm font-medium ${
-                          active ? "bg-black text-white shadow-lg" : "text-gray-700 hover:bg-gray-100"
+                          active ? "bg-[#1f1f1f] text-white shadow-lg" : "text-[#1f1f1f] hover:bg-gray-100"
                         }`}
                       >
                         {item.icon}
@@ -230,7 +232,7 @@ const Header = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="bg-black text-white px-5 py-3 rounded-2xl flex items-center gap-2 text-sm font-medium hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-black/10"
+                  className="bg-[#1f1f1f] text-white px-5 py-3 rounded-2xl flex items-center gap-2 text-sm font-medium hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-black/10"
                 >
                   <LoginOutlined sx={{ fontSize: 20 }} />
                   <span>Login</span>
@@ -238,24 +240,44 @@ const Header = () => {
               )}
             </nav>
 
-            {/* MOBILE BUTTON */}
-            <button
-              onClick={() => setMobileMenu(!mobileMenu)}
-              className="lg:hidden w-11 h-11 rounded-2xl bg-gray-100 hover:bg-gray-200 transition flex items-center justify-center"
-            >
-              {mobileMenu ? <CloseRounded sx={{ fontSize: 26 }} /> : <MenuRounded sx={{ fontSize: 26 }} />}
-            </button>
+            {/* MOBILE CONTROLS (CART & HAMBURGER) */}
+            <div className="flex lg:hidden items-center gap-2">
+              {/* MOBILE SHOPPING CART ICON */}
+              <Link
+                to="/cart"
+                className="relative w-11 h-11 rounded-2xl transition-all duration-300 flex items-center justify-center text-[#1f1f1f] hover:bg-gray-100"
+              >
+                <ShoppingCartOutlined sx={{ fontSize: 24 }} />
+                {cartBadgeCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] flex items-center justify-center font-semibold bg-[#1f1f1f] text-white"
+                  >
+                    {cartBadgeCount}
+                  </motion.span>
+                )}
+              </Link>
+
+              {/* HAMBURGER MENU BUTTON */}
+              <button
+                onClick={() => setMobileMenu(!mobileMenu)}
+                className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-gray-200 transition flex items-center justify-center text-[#1967d2]"
+              >
+                {mobileMenu ? <CloseRounded sx={{ fontSize: 26 }} /> : <MenuRounded sx={{ fontSize: 26 }} />}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* MOBILE MENU DRAWER */}
         <AnimatePresence>
           {mobileMenu && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur-2xl overflow-hidden"
+              className="lg:hidden border-t border-gray-200 bg-[#ffffff] overflow-hidden"
             >
               <div className="px-4 py-5 space-y-2">
                 {navLinks.map((item) => {
@@ -267,7 +289,7 @@ const Header = () => {
                         <button
                           onClick={() => setMobileShopDropdown(!mobileShopDropdown)}
                           className={`flex items-center justify-between px-4 py-4 rounded-2xl transition-all duration-300 ${
-                            active || mobileShopDropdown ? "bg-black text-white" : "bg-gray-50 text-gray-800"
+                            active || mobileShopDropdown ? "bg-[#1f1f1f] text-white" : "bg-gray-50 text-[#1f1f1f]"
                           }`}
                         >
                           <div className="flex items-center gap-3">
@@ -309,7 +331,7 @@ const Header = () => {
                       to={item.path}
                       onClick={() => setMobileMenu(false)}
                       className={`flex items-center justify-between px-4 py-4 rounded-2xl transition-all duration-300 ${
-                        active ? "bg-black text-white" : "bg-gray-50 text-gray-800 hover:bg-gray-100"
+                        active ? "bg-[#1f1f1f] text-white" : "bg-gray-50 text-[#1f1f1f] hover:bg-gray-100"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -319,7 +341,7 @@ const Header = () => {
                       {item.badge > 0 && (
                         <span
                           className={`min-w-[24px] h-[24px] px-2 rounded-full text-xs flex items-center justify-center font-semibold ${
-                            active ? "bg-white text-black" : "bg-black text-white"
+                            active ? "bg-white text-black" : "bg-[#1f1f1f] text-white"
                           }`}
                         >
                           {item.badge}
@@ -338,7 +360,7 @@ const Header = () => {
                         key={item.name}
                         to={item.path}
                         onClick={() => setMobileMenu(false)}
-                        className="flex items-center gap-3 px-4 py-4 rounded-2xl bg-gray-50 text-gray-800 hover:bg-gray-100"
+                        className="flex items-center gap-3 px-4 py-4 rounded-2xl bg-gray-50 text-[#1f1f1f] hover:bg-gray-100"
                       >
                         {item.icon}
                         <span className="font-medium">{item.name}</span>
@@ -359,7 +381,7 @@ const Header = () => {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenu(false)}
-                    className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl bg-black text-white hover:opacity-90 transition-all duration-300"
+                    className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl bg-[#1f1f1f] text-white hover:opacity-90 transition-all duration-300"
                   >
                     <LoginOutlined sx={{ fontSize: 22 }} />
                     <span className="font-medium">Login</span>

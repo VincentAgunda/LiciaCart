@@ -5,7 +5,7 @@ import { AddRounded, CheckRounded } from "@mui/icons-material";
 import { useCart } from "../../hooks/useCart";
 
 // 3 Different background shades matching modern tech storefronts
-const SHADES = ["bg-[#f5f5f7]", "bg-[#e8eaed]", "bg-[#f5f5f7]"];
+const SHADES = ["bg-[#F2F2FC]", "bg-[#e8eaed]","bg-[#DFE1FA]",  "bg-[#F5F5F7]"];
 
 const ProductCard = memo(({ product, shadeIndex = 0 }) => {
   const { addToCart } = useCart();
